@@ -7,5 +7,16 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class SingleTestCodes {
+    @Test
+    fun `Single의just에서Hello아이템출력`() {
+        val single = Single.just("Hello")
+        single.subscribe({
+            println("onSuccess:$it")
+        }, {
+            println("onError:$it")
+        })
+        val test = single.test()
+        test.assertValue("Hello")
+    }
 
 }
