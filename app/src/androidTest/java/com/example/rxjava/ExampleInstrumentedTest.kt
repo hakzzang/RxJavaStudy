@@ -120,4 +120,25 @@ class ExampleInstrumentedTest {
         val test = observable.test()
         test.assertValue("Hello World")
     }
+
+    @Test
+    fun `Observable의fromPublisher연산자_내용확인_ValueCount확인`() {
+        val observable = Observable.fromPublisher<String> {  subscriber ->
+            subscriber.onNext("A")
+            subscriber.onNext("B")
+            subscriber.onNext("C")
+            subscriber.onComplete()
+        }
+        observable.subscribe({
+            println("onNext:$it")
+        }, {
+            println("onError:$it")
+        }, {
+            println("onComplete")
+        })
+
+        val test = observable.test()
+        test.assertValues("A", "B", "C")
+        test.assertValueCount(3)
+    }
 }
