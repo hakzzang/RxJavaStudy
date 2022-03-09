@@ -19,4 +19,17 @@ class SingleTestCodes {
         test.assertValue("Hello")
     }
 
+    @Test
+    fun `Single의create에서Hello출력`() {
+        val single = Single.create<String> { emitter ->
+            emitter.onSuccess("Hello")
+        }
+        single.subscribe({
+            println("onSuccess:$it")
+        }, {
+            println("onError:$it")
+        })
+        val test = single.test()
+        test.assertValues("Hello")
+    }
 }
