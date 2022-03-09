@@ -86,4 +86,13 @@ class ExampleInstrumentedTest {
         test.assertError(NullPointerException::class.java)
     }
 
+    @Test
+    fun `Observable의fromArray연산자_Array내용확인_ValueCount확인`() {
+        val observable = Observable.fromArray("A", "B", "C")
+        observable.subscribe(System.out::println)
+
+        val test = observable.test()
+        test.assertValues("A", "B", "C")
+        test.assertValueCount(3)
+    }
 }
