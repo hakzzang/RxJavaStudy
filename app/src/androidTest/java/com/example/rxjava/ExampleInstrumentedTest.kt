@@ -1,0 +1,31 @@
+package com.example.rxjava
+
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subscribers.TestSubscriber
+
+import org.junit.Test
+import org.junit.runner.RunWith
+
+import org.junit.Assert.*
+import org.junit.internal.builders.SuiteMethodBuilder
+
+/**
+ * Instrumented test, which will execute on an Android device.
+ *
+ * See [testing documentation](http://d.android.com/tools/testing).
+ */
+@RunWith(AndroidJUnit4::class)
+class ExampleInstrumentedTest {
+    @Test
+    fun `Observable의create로Hello_World_생성`() {
+        val observable = Observable.create<String> { emitter ->
+            emitter.onNext("Hello")
+            emitter.onNext("World")
+            emitter.onComplete()
+        }
+        val test = observable.test()
+        test.assertValues("Hello", "World")
+    }
+}
