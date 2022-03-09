@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 
 import org.junit.Assert.*
 import org.junit.internal.builders.SuiteMethodBuilder
+import java.lang.NullPointerException
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -73,5 +74,16 @@ class ExampleInstrumentedTest {
         test.assertValues("Hello", "World")
     }
 
+    @Test
+    fun `Observable의just로null생성시에_내부적으로_NullPointerException_발생`() {
+        val observable = Observable.just<String>(null)
+        observable.subscribe({
+            println("Success:$it")
+        },{
+            println("Error:$it")
+        })
+        val test = observable.test()
+        test.assertError(NullPointerException::class.java)
+    }
 
 }
