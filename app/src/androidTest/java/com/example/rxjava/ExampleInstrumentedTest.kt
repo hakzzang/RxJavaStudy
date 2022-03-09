@@ -1,5 +1,6 @@
 package com.example.rxjava
 
+import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.reactivex.rxjava3.core.Observable
@@ -27,5 +28,39 @@ class ExampleInstrumentedTest {
         }
         val test = observable.test()
         test.assertValues("Hello", "World")
+    }
+
+    @Test
+    fun `Observable의create로Hello_World_생성시에_고의적으로_IllegalAccessException_에러발생`() {
+        val observable = Observable.create<String> { emitter ->
+            emitter.onNext("Hello")
+            emitter.onError(IllegalAccessException("Error"))
+            emitter.onNext("World")
+            emitter.onComplete()
+        }
+        observable.subscribe({
+            println("Success:$it")
+        },{
+            println("ERROR:$it")
+        })
+        val test = observable.test()
+        test.assertError(IllegalAccessException::class.java)
+    }
+
+    @Test
+    fun `Observable의create로Hello_World_생성시에_에러발생시에_내용확인`() {
+        val observable = Observable.create<String> { emitter ->
+            emitter.onNext("Hello")
+            emitter.onError(IllegalAccessException("Error"))
+            emitter.onNext("World")
+            emitter.onComplete()
+        }
+        observable.subscribe({
+            println("Success:$it")
+        },{
+            println("ERROR:$it")
+        })
+        val test = observable.test()
+        test.assertValues("Hello")
     }
 }
