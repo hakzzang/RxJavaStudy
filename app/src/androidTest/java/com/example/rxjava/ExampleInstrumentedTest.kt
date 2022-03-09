@@ -63,4 +63,15 @@ class ExampleInstrumentedTest {
         val test = observable.test()
         test.assertValues("Hello")
     }
+
+    @Test
+    fun `Observable의just로Hello_Wolrd_생성`(){
+        val observable = Observable.just("Hello", "World")
+        observable.subscribe(System.out::println)
+
+        val test = observable.test()
+        test.assertValues("Hello", "World")
+    }
+
+
 }
