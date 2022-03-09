@@ -49,4 +49,19 @@ class SingleTestCodes {
         val test = single.test()
         test.assertError(AssertionError::class.java)
     }
+
+    @Test
+    fun `Single의toObservable에서Hello_World출력`() {
+        val observable = Single.just("Hello World").toObservable()
+
+        observable.subscribe({
+            println("onNext:$it")
+        }, {
+            println("onError:$it")
+        }, {
+            println("onComplete")
+        })
+        val test = observable.test()
+        test.assertValue("Hello World")
+    }
 }
