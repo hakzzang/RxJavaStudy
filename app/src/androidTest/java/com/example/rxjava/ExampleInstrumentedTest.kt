@@ -95,4 +95,14 @@ class ExampleInstrumentedTest {
         test.assertValues("A", "B", "C")
         test.assertValueCount(3)
     }
+
+    @Test
+    fun `Observable의fromIterable연산자_Iterator_내용확인_ValueCount확인`() {
+        val observable = Observable.fromIterable(listOf("A", "B", "C"))
+        observable.subscribe(System.out::println)
+
+        val test = observable.test()
+        test.assertValues("A", "B", "C")
+        test.assertValueCount(3)
+    }
 }
