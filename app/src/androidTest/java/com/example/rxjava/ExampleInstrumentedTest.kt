@@ -12,6 +12,7 @@ import org.junit.runner.RunWith
 import org.junit.Assert.*
 import org.junit.internal.builders.SuiteMethodBuilder
 import java.lang.NullPointerException
+import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 
 /**
@@ -140,5 +141,17 @@ class ExampleInstrumentedTest {
         val test = observable.test()
         test.assertValues("A", "B", "C")
         test.assertValueCount(3)
+    }
+
+    @Test
+    fun `Observable의fromCallable연산자_내용확인_ValueCount확인`() {
+        val callable = Callable {
+            return@Callable "Hello"
+        }
+
+        val source = Observable.fromCallable(callable)
+
+        val test = source.test()
+        test.assertValues("Hello")
     }
 }
