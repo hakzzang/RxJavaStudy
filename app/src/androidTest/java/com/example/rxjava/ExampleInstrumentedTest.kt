@@ -12,6 +12,7 @@ import org.junit.runner.RunWith
 import org.junit.Assert.*
 import org.junit.internal.builders.SuiteMethodBuilder
 import java.lang.NullPointerException
+import java.util.concurrent.Executors
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -104,5 +105,19 @@ class ExampleInstrumentedTest {
         val test = observable.test()
         test.assertValues("A", "B", "C")
         test.assertValueCount(3)
+    }
+
+    @Test
+    fun `Observable의fromFuture연산자_내용확인`() {
+        val future = Executors.newSingleThreadExecutor()
+            .submit<String> {
+                Thread.sleep(5_000L)
+                return@submit "Hello World"
+            }
+        val observable = Observable.fromFuture(future)
+        observable.subscribe(System.out::println)
+
+        val test = observable.test()
+        test.assertValue("Hello World")
     }
 }
