@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.reactivex.rxjava3.core.Single
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.AssertionError
 
 @RunWith(AndroidJUnit4::class)
 class SingleTestCodes {
@@ -31,5 +32,21 @@ class SingleTestCodes {
         })
         val test = single.test()
         test.assertValues("Hello")
+    }
+
+    @Test
+    fun `Single의create에서Hello_World출력시에AssertionError발생확인`() {
+        val single = Single.create<String> { emitter ->
+            emitter.onSuccess("Hello")
+            emitter.onSuccess("World")
+        }
+
+        single.subscribe({
+            println("onSuccess:$it")
+        }, {
+            println("onError:$it")
+        })
+        val test = single.test()
+        test.assertError(AssertionError::class.java)
     }
 }
