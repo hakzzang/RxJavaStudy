@@ -1,6 +1,7 @@
 package com.example.rxjava
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -125,5 +126,19 @@ class Page122SingleTestCodes {
         }, {
             println("onComplete!")
         })
+    }
+
+    @Test
+    fun `Completable의create에서Hello출력`() {
+        val completable = Completable.create { emitter ->
+            emitter.onComplete()
+        }
+        completable.subscribe {
+            //onCompleted 호출
+            println("completed1")
+        }
+        val test = completable.test()
+        test.assertValues()
+        test.assertComplete()
     }
 }
