@@ -141,4 +141,18 @@ class Page122SingleTestCodes {
         test.assertValues()
         test.assertComplete()
     }
+
+    @Test
+    fun `Completable의fromRunnable실행`() {
+        val completable = Completable.fromRunnable {
+
+        }
+        completable.subscribe {
+            //onCompleted 호출
+            println("completed2")
+        }
+        val test = completable.test()
+        test.assertValues()
+        test.assertComplete()
+    }
 }
