@@ -8,6 +8,7 @@ import io.reactivex.rxjava3.core.Single
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.lang.AssertionError
+import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class Page122SingleTestCodes {
@@ -154,5 +155,18 @@ class Page122SingleTestCodes {
         val test = completable.test()
         test.assertValues()
         test.assertComplete()
+    }
+
+    @Test
+    fun `Observable_interval에서sleep시_아이템출력확인`() {
+        val src = Observable.interval(1, TimeUnit.SECONDS)
+        src.subscribe {
+            println("#1:$it")
+        }
+        Thread.sleep(3000L)
+        src.subscribe {
+            println("#2:$it")
+        }
+        Thread.sleep(3000L)
     }
 }
