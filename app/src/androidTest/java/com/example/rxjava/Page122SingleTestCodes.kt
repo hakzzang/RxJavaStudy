@@ -83,6 +83,22 @@ class Page122SingleTestCodes {
     }
 
     @Test
+    fun `Maybe의create에서_complete_출력`() {
+        val maybe = Maybe.create<Int> { emitter -> emitter.onComplete() }
+        maybe.subscribe({
+            println("onSuccess2")
+        }, {
+            println("onError")
+        }, {
+            println("onComplete2")
+        })
+
+        val test = maybe.test()
+        test.assertValues()
+        test.assertComplete()
+    }
+
+    @Test
     fun `Maybe_just_출력`() {
         //Maybe 또한 Single과 같이 1개의 아이템을 출력
         val maybe = Maybe.just("Hello")
