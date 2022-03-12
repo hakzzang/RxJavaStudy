@@ -68,19 +68,18 @@ class Page122SingleTestCodes {
     }
 
     @Test
-    fun `Maybe의create에서`() {
-        Maybe.create<Int> { emitter ->
+    fun `Maybe의create에서_1개아이템_출력`() {
+        val maybe = Maybe.create<Int> { emitter ->
             emitter.onSuccess(100)
             emitter.onSuccess(200)
             emitter.onComplete()
-        }.doOnSuccess { println("doOnSuccess1") }
+        }
+        maybe.doOnSuccess { println("doOnSuccess1") }
             .doOnComplete { println("doOnComplete1") }
             .subscribe(System.out::println)
 
-        Maybe.create<Int> { emitter -> emitter.onComplete() }
-            .doOnSuccess { println("doOnSuccess2") }
-            .doOnComplete { println("doOnComplete2") }
-            .subscribe(System.out::println)
+        val test = maybe.test()
+        test.assertValues(100)
     }
 
     @Test
