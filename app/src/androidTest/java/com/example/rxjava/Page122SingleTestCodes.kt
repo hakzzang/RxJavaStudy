@@ -9,7 +9,7 @@ import org.junit.runner.RunWith
 import java.lang.AssertionError
 
 @RunWith(AndroidJUnit4::class)
-class SingleTestCodes {
+class Page122SingleTestCodes {
     @Test
     fun `Single의just에서Hello아이템출력`() {
         val single = Single.just("Hello")
