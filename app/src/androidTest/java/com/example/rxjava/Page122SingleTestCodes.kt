@@ -5,6 +5,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.lang.AssertionError
@@ -236,5 +237,20 @@ class Page122SingleTestCodes {
             disposable.dispose()
         }.start()
         Thread.sleep(5000L)
+    }
+
+    @Test
+    fun `Observable을통해서CompositeDisposable값출력확인`() {
+        val compositeDisposable = CompositeDisposable()
+        val source = Observable.interval(
+            100, TimeUnit.MILLISECONDS
+        )
+        val d1 = source.subscribe { println("#1:$it") }
+        val d2 = source.subscribe { println("#2:$it") }
+        val d3 = source.subscribe { println("#3:$it") }
+        compositeDisposable.addAll(d1, d2, d3)
+        Thread.sleep(350L)
+        compositeDisposable.dispose()
+        Thread.sleep(500L)
     }
 }
