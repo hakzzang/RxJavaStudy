@@ -28,4 +28,34 @@ class Page131OperatorTesst {
         val deferValue = deferTest.values()[0].time
         assertEquals(deferValue.minus(justValue) / SECOND, 5)
     }
+
+    @Test
+    fun `Observable의empty값complete확인`() {
+        val source = Observable.empty<String>()
+        source
+            .subscribe({
+                println("#onNext")
+            }, {
+
+            }, {
+                println("#onComplete")
+            })
+        val test = source.test()
+        test.assertComplete()
+    }
+
+    @Test
+    fun `Observable의never값notcomplete확인`() {
+        val source = Observable.never<String>()
+        source
+            .subscribe({
+                println("#onNext")
+            }, {
+
+            }, {
+                println("#onComplete")
+            })
+        val test = source.test()
+        test.assertNotComplete()
+    }
 }
