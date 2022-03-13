@@ -90,4 +90,16 @@ class Page131OperatorTesst {
         val test = source.test()
         test.assertValues(10,20,30)
     }
+
+    @Test
+    fun `Observable의flatmap을통한_출력값확인`() {
+        //Transforming
+        val source = Observable
+            .just(1,2,3)
+            .flatMap { Observable.just(it*10) }
+
+        source.subscribe { println("#value:$it") }
+        val test = source.test()
+        test.assertValues(10,20,30)
+    }
 }
