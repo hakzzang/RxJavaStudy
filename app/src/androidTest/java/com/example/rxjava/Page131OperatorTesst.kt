@@ -58,4 +58,14 @@ class Page131OperatorTesst {
         val test = source.test()
         test.assertNotComplete()
     }
+
+    @Test
+    fun `Observable의range1_3_출력값123확인`() {
+        val source = Observable.range(1,3)
+        source.subscribe {
+            println("#onNext:$it")
+        }
+        val test = source.test()
+        test.assertValues(1,2,3)
+    }
 }
