@@ -183,4 +183,44 @@ class Page122SingleTestCodes {
         }
         Thread.sleep(3000L)
     }
+
+    @Test
+    fun `ConnecatableObservable의publish를통한autoconnect_1_확인`() {
+        val src = Observable.interval(100, TimeUnit.MILLISECONDS)
+            .publish()
+            .autoConnect(1)
+
+        src.subscribe(
+            { println("#A:$it") },
+            {},
+            { println("#Completed A")}
+        )
+        Thread.sleep(500L)
+        src.subscribe(
+            { println("#B:$it") },
+            {},
+            { println("#Completed A")}
+        )
+        Thread.sleep(500L)
+    }
+
+    @Test
+    fun `ConnecatableObservable의publish를통한autoconnect_2_확인`() {
+        val src = Observable.interval(100, TimeUnit.MILLISECONDS)
+            .publish()
+            .autoConnect(2)
+
+        src.subscribe(
+            { println("#A:$it") },
+            {},
+            { println("#Completed A")}
+        )
+        Thread.sleep(500L)
+        src.subscribe(
+            { println("#B:$it") },
+            {},
+            { println("#Completed A")}
+        )
+        Thread.sleep(500L)
+    }
 }
