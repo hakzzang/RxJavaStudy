@@ -223,4 +223,18 @@ class Page122SingleTestCodes {
         )
         Thread.sleep(500L)
     }
+
+    @Test
+    fun `Observable을통해서Disposable값출력확인`() {
+        val source = Observable.interval(1, TimeUnit.SECONDS)
+        val disposable = source.subscribe {
+            println("#1:$it")
+        }
+
+        Thread {
+            Thread.sleep(3500L)
+            disposable.dispose()
+        }.start()
+        Thread.sleep(5000L)
+    }
 }
