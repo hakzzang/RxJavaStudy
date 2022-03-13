@@ -169,4 +169,18 @@ class Page122SingleTestCodes {
         }
         Thread.sleep(3000L)
     }
+
+    @Test
+    fun `Observable의publish연산자_아이템출력확인`() {
+        val src = Observable.interval(1, TimeUnit.SECONDS).publish()
+        src.connect()
+        src.subscribe{
+            println("#1:$it")
+        }
+        Thread.sleep(3000L)
+        src.subscribe {
+            println("#2:$it")
+        }
+        Thread.sleep(3000L)
+    }
 }
