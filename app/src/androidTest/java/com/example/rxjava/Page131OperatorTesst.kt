@@ -6,6 +6,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.seconds
 
 @RunWith(AndroidJUnit4::class)
@@ -67,5 +68,17 @@ class Page131OperatorTesst {
         }
         val test = source.test()
         test.assertValues(1,2,3)
+    }
+
+    @Test
+    fun `Observable의timer출력값확인`() {
+        val source = Observable.timer(1, TimeUnit.SECONDS)
+        println("#start:${Date()}")
+        source.subscribe(
+            {},{},{
+                println("#onComplete:${Date()}")
+            }
+        )
+        Thread.sleep(3000L)
     }
 }
