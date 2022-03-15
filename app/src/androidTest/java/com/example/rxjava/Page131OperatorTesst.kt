@@ -102,4 +102,15 @@ class Page131OperatorTesst {
         val test = source.test()
         test.assertValues(10,20,30)
     }
+
+    @Test
+    fun `Observable의buffer를통한_출력값확인`() {
+        //Transforming
+        val source = Observable.range(0, 10).buffer(3)
+        source.subscribe { integers ->
+            println(integers.toString())
+        }
+        val test = source.test()
+        test.assertValues(listOf(0, 1, 2), listOf(3, 4, 5), listOf(6, 7, 8), listOf(9))
+    }
 }
