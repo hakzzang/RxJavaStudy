@@ -191,7 +191,7 @@ class Page131OperatorTesst {
             println(it)
         }
         val test = source.test()
-        test.assertValue(2)
+        test.assertValue(3)
     }
 
     @Test
