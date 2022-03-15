@@ -150,4 +150,26 @@ class Page131OperatorTesst {
             }
         }
     }
+
+    @Test
+    fun `Observable의debounce연산자_출력값확인`() {
+        //filtering
+        val source = Observable.create<String> { emitter ->
+            emitter.onNext("1")
+            Thread.sleep(100L)
+            emitter.onNext("2")
+            emitter.onNext("3")
+            emitter.onNext("4")
+            emitter.onNext("5")
+            Thread.sleep(100L)
+            emitter.onNext("6")
+            Thread.sleep(100L)
+        }.debounce(10, TimeUnit.MILLISECONDS)
+        source.subscribe {
+            println(it)
+        }
+        val test = source.test()
+        test.assertValues("1", "5", "6")
+        Thread.sleep(1000L)
+    }
 }
