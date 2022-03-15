@@ -222,4 +222,13 @@ class Page131OperatorTesst {
         test.assertValues(3, 4)
     }
 
+    @Test
+    fun `Observable의take연산자_출력값확인`() {
+        //filtering
+        val source = Observable.just(1, 2, 3, 4).take(2)
+        source.subscribe { println(it) }
+        val test = source.test()
+        test.assertValues(1, 2)
+    }
+
 }
