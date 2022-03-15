@@ -240,4 +240,16 @@ class Page131OperatorTesst {
         val test = source.test()
         test.assertValue(false)
     }
+
+    @Test
+    fun `Observable의amb연산자_출력값확인`() {
+        //filtering
+        val source1 = Observable.just(20, 40, 60).delay(0, TimeUnit.MILLISECONDS)
+        val source2 = Observable.just(1,2,3).delay(100, TimeUnit.MILLISECONDS)
+        val source3 = Observable.just(20, 40, 60).delay(200, TimeUnit.MILLISECONDS)
+        val list = listOf(source1, source2, source3)
+        Observable.amb(list).subscribe {
+            println(it)
+        }
+    }
 }
