@@ -113,4 +113,14 @@ class Page131OperatorTesst {
         val test = source.test()
         test.assertValues(listOf(0, 1, 2), listOf(3, 4, 5), listOf(6, 7, 8), listOf(9))
     }
+
+    @Test
+    fun `Observable의scan을통한_출력값확인`() {
+        val source = Observable
+            .range(1, 5)
+            .scan { x, y -> x + y }
+        source.subscribe(System.out::println)
+        val test = source.test()
+        test.assertValues(1, 3, 6, 10, 15)
+    }
 }
