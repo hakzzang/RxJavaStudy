@@ -193,4 +193,14 @@ class Page131OperatorTesst {
         val test = source.test()
         test.assertValue(2)
     }
+
+    @Test
+    fun `Observable의filter연산자_출력값확인`() {
+        //filtering
+        val source = Observable.just(2, 30, 22, 5, 60, 1)
+            .filter { x -> x > 10 }
+        source.subscribe { println(it) }
+        val test = source.test()
+        test.assertValues(30, 22, 60)
+    }
 }
