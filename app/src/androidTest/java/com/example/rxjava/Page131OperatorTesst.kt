@@ -203,4 +203,13 @@ class Page131OperatorTesst {
         val test = source.test()
         test.assertValues(30, 22, 60)
     }
+
+    @Test
+    fun `Observable의sample연산자_출력값확인`() {
+        //filtering
+        val source = Observable.interval(100, TimeUnit.MILLISECONDS)
+            .sample(150, TimeUnit.MILLISECONDS)
+        source.subscribe { println(it) }
+        Thread.sleep(1000L)
+    }
 }
