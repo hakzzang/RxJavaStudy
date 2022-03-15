@@ -231,4 +231,13 @@ class Page131OperatorTesst {
         test.assertValues(1, 2)
     }
 
+    @Test
+    fun `Observable의all연산자_출력값확인`() {
+        //filtering
+        val source = Observable.just(2,1, -1, 5)
+            .all { integer -> integer > 0 }
+        source.subscribe { it -> println(it) }
+        val test = source.test()
+        test.assertValue(false)
+    }
 }
