@@ -175,10 +175,22 @@ class Page131OperatorTesst {
 
     @Test
     fun `Observable의distinct연산자_출력값확인`() {
+        //filtering
         val source = Observable.just(1,2,2,1,3)
             .distinct()
         source.subscribe { println(it) }
         val test = source.test()
         test.assertValues(1, 2, 3)
+    }
+
+    @Test
+    fun `Observable의elementAt연산자_출력값확인`() {
+        //filtering
+        val source = Observable.just(1,2,3,4).elementAt(2)
+        source.subscribe {
+            println(it)
+        }
+        val test = source.test()
+        test.assertValue(2)
     }
 }
