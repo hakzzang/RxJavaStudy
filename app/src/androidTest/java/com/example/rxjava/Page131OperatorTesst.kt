@@ -212,4 +212,14 @@ class Page131OperatorTesst {
         source.subscribe { println(it) }
         Thread.sleep(1000L)
     }
+
+    @Test
+    fun `Observable의skip연산자_출력값확인`() {
+        //filtering
+        val source = Observable.just(1, 2, 3, 4).skip(2)
+        source.subscribe { println(it) }
+        val test = source.test()
+        test.assertValues(3, 4)
+    }
+
 }
