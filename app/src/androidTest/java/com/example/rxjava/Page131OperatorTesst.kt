@@ -172,4 +172,13 @@ class Page131OperatorTesst {
         test.assertValues("1", "5", "6")
         Thread.sleep(1000L)
     }
+
+    @Test
+    fun `Observable의distinct연산자_출력값확인`() {
+        val source = Observable.just(1,2,2,1,3)
+            .distinct()
+        source.subscribe { println(it) }
+        val test = source.test()
+        test.assertValues(1, 2, 3)
+    }
 }
