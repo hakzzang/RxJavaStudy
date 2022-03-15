@@ -2,6 +2,7 @@ package com.example.rxjava
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.observables.GroupedObservable
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -116,11 +117,37 @@ class Page131OperatorTesst {
 
     @Test
     fun `Observable의scan을통한_출력값확인`() {
+        //Transforming
         val source = Observable
             .range(1, 5)
             .scan { x, y -> x + y }
         source.subscribe(System.out::println)
         val test = source.test()
         test.assertValues(1, 3, 6, 10, 15)
+    }
+
+    @Test
+    fun `Observable의groupby연산자_출력값확인`() {
+        //Transforming
+        val source = Observable.just(
+            "Magenta Circle",
+            "Cyan Circle",
+            "Yellow Triangle",
+            "Yellow Circle",
+            "Magenta Triangle",
+            "Cyan Triangle"
+        ).groupBy { item ->
+            when {
+                item.contains("Circle") -> return@groupBy "C"
+                item.contains("Triangle") -> return@groupBy "T"
+                else -> return@groupBy "None"
+            }
+        }
+        source.subscribe { group ->
+            println(group.key + "그룹 발행 시작")
+            group.subscribe { shape ->
+                println(group.key + ":" + shape)
+            }
+        }
     }
 }
