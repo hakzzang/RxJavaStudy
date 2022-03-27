@@ -23,4 +23,22 @@ class Page156ErrorHandlingOperatorTest {
         val test = src1.test()
         test.assertError(NumberFormatException::class.java)
     }
+
+    @Test
+    fun `onErrorReturn연산자_테스트`() {
+        val src1 = Observable
+            .just("1", "2", "a", "4")
+            .map { it.toInt() }
+            .onErrorReturn { return@onErrorReturn -1 }
+
+        src1.subscribe({
+            println("onNext:$it")
+        }, {
+            println("onError:${it.message}")
+        }, {
+            println("onCompleted")
+        })
+        val test = src1.test()
+        test.assertValues(1, 2, -1)
+    }
 }
