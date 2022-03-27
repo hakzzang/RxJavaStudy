@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         main쓰레드_스케듈러_테스트코드()
         subscribeOn_io쓰레드_스케듈러_테스트코드()
         computation쓰레드_스케듈러_테스트코드()
+        subscribeOn_io쓰레드_174_스케듈러_테스트코드()
     }
 
     //page171
@@ -77,6 +78,21 @@ class MainActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io()).subscribe { number ->
             val subscribedThreadName = Thread.currentThread().name
             println("#computation쓰레드_174-subscribe : $subscribedThreadName number:$number")
+        }
+    }
+
+    private fun `subscribeOn_io쓰레드_174_스케듈러_테스트코드`() {
+        //구독과 아이템 발급 모두 subscribeOn에 의해서 변함
+        println("##########subscribeOn_io쓰레드_174-start########")
+        val src = Observable
+            .interval(200L, TimeUnit.MILLISECONDS)
+            .doFinally {
+                println("##########subscribeOn_io쓰레드_174-end########")
+            }
+
+        src.subscribe { time ->
+            val subscribedThreadName = Thread.currentThread().name
+            println("#subscribeOn_io쓰레드_174-subscribe : $subscribedThreadName number:$time")
         }
     }
 }
