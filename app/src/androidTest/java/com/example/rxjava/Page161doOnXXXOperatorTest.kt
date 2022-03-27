@@ -34,4 +34,21 @@ class Page161doOnXXXOperatorTest {
             }
             .subscribe { println("subscribed = $it") }
     }
+
+    @Test
+    fun `doOnSubscribe연산자`() {
+        val src1 = Observable
+            .just(1, 2, 3)
+            .doOnSubscribe { item ->
+                println("구독 시작")
+                //return 시키는 값이 없음
+                return@doOnSubscribe
+            }
+        src1.subscribe {
+            println(it)
+        }
+        val test = src1.test()
+        test.assertValues(1, 2, 3)
+
+    }
 }
