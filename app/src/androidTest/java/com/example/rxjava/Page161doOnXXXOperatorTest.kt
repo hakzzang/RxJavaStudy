@@ -83,4 +83,35 @@ class Page161doOnXXXOperatorTest {
         test.assertError(ArithmeticException::class.java)
 
     }
+
+    @Test
+    fun `doOnCompleted연산자-error가_발생할때_결과확인`() {
+        val src1 = Observable
+            .just(1, 2, 3, 0)
+            .map { 10 / it }
+            .doOnComplete {
+                println("doOnComplete")
+                //return 시키는 값이 없음
+                return@doOnComplete
+            }
+
+        val test = src1.test()
+        test.assertError(ArithmeticException::class.java)
+    }
+
+    @Test
+    fun `doOnTerminate연산자-error가_발생할때_결과확인`() {
+        val src1 = Observable
+            .just(1, 2, 3, 0)
+            .map { 10 / it }
+            .doOnTerminate {
+                println("doOnTerminate")
+                //return 시키는 값이 없음
+                return@doOnTerminate
+            }
+        val test = src1.test()
+        test.assertError(ArithmeticException::class.java)
+    }
+
+
 }
