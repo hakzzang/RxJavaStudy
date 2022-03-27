@@ -136,4 +136,24 @@ class Page161doOnXXXOperatorTest {
         println("isDisposed:${result.isDisposed}")
     }
 
+    @Test
+    fun `doFinally연산자`() {
+        val src1 = Observable
+            .interval(500, TimeUnit.MILLISECONDS)
+            .doOnComplete { println("doOnComplete") }
+            .doOnTerminate { println("doOnTerminate") }
+            .doFinally { println("doFinally") }
+
+        val result = src1.subscribe({
+            println(it)
+        }, {
+
+        }, {
+            println("doOnCompleted")
+        })
+        Thread.sleep(1000L)
+        result.dispose()
+        Thread.sleep(1000L)
+        println("isDisposed:${result.isDisposed}")
+    }
 }
