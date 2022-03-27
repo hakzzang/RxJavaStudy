@@ -59,4 +59,23 @@ class Page156ErrorHandlingOperatorTest {
         val test = src1.test()
         test.assertValues(1, 2, 100, 200, 300)
     }
+
+    @Test
+    fun `retry연산자_테스트`() {
+        val src1 = Observable
+            .just("1", "2", "a", "4")
+            .map { it.toInt() }
+            .retry(1)
+
+        src1.subscribe({
+            println("onNext:$it")
+        }, {
+            println("onError:${it}")
+        }, {
+            println("onCompleted")
+        })
+        val test = src1.test()
+        test.assertValues(1, 2, 1, 2)
+        test.assertError(NumberFormatException::class.java)
+    }
 }
