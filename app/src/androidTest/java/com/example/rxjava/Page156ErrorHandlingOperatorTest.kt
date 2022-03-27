@@ -41,4 +41,22 @@ class Page156ErrorHandlingOperatorTest {
         val test = src1.test()
         test.assertValues(1, 2, -1)
     }
+
+    @Test
+    fun `onErrorResumeNext연산자_테스트`() {
+        val src1 = Observable
+            .just("1", "2", "a", "4")
+            .map { it.toInt() }
+            .onErrorResumeNext { return@onErrorResumeNext Observable.just(100, 200, 300) }
+
+        src1.subscribe({
+            println("onNext:$it")
+        }, {
+            println("onError:${it.message}")
+        }, {
+            println("onCompleted")
+        })
+        val test = src1.test()
+        test.assertValues(1, 2, 100, 200, 300)
+    }
 }
