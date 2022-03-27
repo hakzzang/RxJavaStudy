@@ -82,4 +82,43 @@ class Page151CombiningOperatorsTest {
         Thread.sleep(5000L)
         test.assertValues("1A", "2B", "3C", "4D")
     }
+
+    @Test
+    fun `merge연산자_테스트`() {
+        val src1 = Observable.create<String> { emitter ->
+            Thread {
+                for (number in 1..5) {
+                    emitter.onNext(number.toString())
+                    try {
+                        Thread.sleep(1000L)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }.start()
+        }
+
+        val src2 = Observable.create<String> { emitter ->
+            Thread {
+                try {
+                    Thread.sleep(500L)
+                    emitter.onNext("A")
+                    Thread.sleep(700L)
+                    emitter.onNext("B")
+                    Thread.sleep(100L)
+                    emitter.onNext("C")
+                    Thread.sleep(700L)
+                    emitter.onNext("D")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }.start()
+        }
+
+        val result = Observable.merge(src1, src2)
+        val test = result.test()
+        Thread.sleep(5000L)
+        result.subscribe { println(it)}
+        test.assertValues("1", "A", "2", "B", "C", "3", "D", "4", "5")
+    }
 }
