@@ -1,16 +1,10 @@
 package com.example.rxjava
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import com.example.rxjava.databinding.ActivityMainBinding
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,24 +13,46 @@ class MainActivity : AppCompatActivity() {
         setContentView(ActivityMainBinding.inflate(layoutInflater).root)
 
         main쓰레드_스케듈러_테스트코드()
+        subscribeOn_io쓰레드_스케듈러_테스트코드()
     }
 
     //page171
     private fun `main쓰레드_스케듈러_테스트코드`() {
-        println("##########main쓰레드_스케듈러_테스트코드-start########")
+        println("##########main쓰레드_171-start########")
         val src = Observable.create<Int> { emitter ->
             for (number in 0 until 3) {
                 val threadName = Thread.currentThread().name
-                println("#쓰레드-create : $threadName number:$number")
+                println("#main쓰레드_171-create : $threadName number:$number")
                 emitter.onNext(number)
                 Thread.sleep(100L)
             }
             emitter.onComplete()
+        }.doFinally {
+            println("##########main쓰레드_171-end########")
         }
         src.subscribe { number ->
             val subscribedThreadName = Thread.currentThread().name
-            println("#쓰레드-subscribe : $subscribedThreadName number:$number")
+            println("#main쓰레드-subscribe : $subscribedThreadName number:$number")
         }
-        println("##########main쓰레드_스케듈러_테스트코드-end########")
+    }
+
+    private fun `subscribeOn_io쓰레드_스케듈러_테스트코드`() {
+        //구독과 아이템 발급 모두 subscribeOn에 의해서 변함
+        println("##########subscribeOn_io쓰레드_173-start########")
+        val src = Observable.create<Int> { emitter ->
+            for (number in 0 until 3) {
+                val threadName = Thread.currentThread().name
+                println("#subscribeOn_io쓰레드_173-create : $threadName number:$number")
+                emitter.onNext(number)
+                Thread.sleep(100L)
+            }
+            emitter.onComplete()
+        }.doFinally {
+            println("##########subscribeOn_io쓰레드_173-end########")
+        }
+        src.subscribeOn(Schedulers.io()).subscribe { number ->
+            val subscribedThreadName = Thread.currentThread().name
+            println("#subscribeOn_io쓰레드_173-subscribe : $subscribedThreadName number:$number")
+        }
     }
 }
