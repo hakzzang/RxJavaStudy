@@ -51,4 +51,21 @@ class Page161doOnXXXOperatorTest {
         test.assertValues(1, 2, 3)
 
     }
+
+    @Test
+    fun `doOnCompleted연산자`() {
+        val src1 = Observable
+            .just(1, 2, 3)
+            .doOnComplete {
+                println("구독 완료")
+                //return 시키는 값이 없음
+                return@doOnComplete
+            }
+        src1.subscribe {
+            println(it)
+        }
+        val test = src1.test()
+        test.assertValues(1, 2, 3)
+
+    }
 }
