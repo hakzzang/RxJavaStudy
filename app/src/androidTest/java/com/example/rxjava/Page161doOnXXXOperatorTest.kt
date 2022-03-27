@@ -23,4 +23,15 @@ class Page161doOnXXXOperatorTest {
                 }
             }.subscribe { println("subscribed = $it") }
     }
+
+    @Test
+    fun `doOnNext연산자`() {
+        Observable
+            .just(1, 2, 3)
+            .doOnNext { item ->
+                //return 시키는 값이 없음
+                return@doOnNext
+            }
+            .subscribe { println("subscribed = $it") }
+    }
 }
