@@ -68,4 +68,19 @@ class Page161doOnXXXOperatorTest {
         test.assertValues(1, 2, 3)
 
     }
+
+    @Test
+    fun `doOnError연산자`() {
+        val src1 = Observable
+            .just(1, 2, 3, 0)
+            .map { 10 / it }
+            .doOnError {
+                println("오류:$it")
+                //return 시키는 값이 없음
+                return@doOnError
+            }
+        val test = src1.test()
+        test.assertError(ArithmeticException::class.java)
+
+    }
 }
