@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.reactivex.rxjava3.core.Observable
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class Page161doOnXXXOperatorTest {
@@ -113,5 +114,26 @@ class Page161doOnXXXOperatorTest {
         test.assertError(ArithmeticException::class.java)
     }
 
+    @Test
+    fun `doOnDispose연산자`() {
+        val src1 = Observable
+            .interval(500, TimeUnit.MILLISECONDS)
+            .doOnDispose {
+                println("doOnDispose")
+                //return 시키는 값이 없음
+                return@doOnDispose
+            }
+        val result = src1.subscribe({
+            println(it)
+        }, {
+
+        }, {
+            println("doOnCompleted")
+        })
+        Thread.sleep(1000L)
+        result.dispose()
+        Thread.sleep(5000L)
+        println("isDisposed:${result.isDisposed}")
+    }
 
 }
