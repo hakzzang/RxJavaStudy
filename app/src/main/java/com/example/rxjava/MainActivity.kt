@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.rxjava.databinding.ActivityMainBinding
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,6 +15,7 @@ class MainActivity : AppCompatActivity() {
 
         main쓰레드_스케듈러_테스트코드()
         subscribeOn_io쓰레드_스케듈러_테스트코드()
+        computation쓰레드_스케듈러_테스트코드()
     }
 
     //page171
@@ -53,6 +55,28 @@ class MainActivity : AppCompatActivity() {
         src.subscribeOn(Schedulers.io()).subscribe { number ->
             val subscribedThreadName = Thread.currentThread().name
             println("#subscribeOn_io쓰레드_173-subscribe : $subscribedThreadName number:$number")
+        }
+    }
+
+    private fun `computation쓰레드_스케듈러_테스트코드`() {
+        //구독과 아이템 발급 모두 subscribeOn에 의해서 변함
+        println("##########computation쓰레드_174-start########")
+        val src = Observable.create<Int> { emitter ->
+            for (number in 0 until 3) {
+                val threadName = Thread.currentThread().name
+                println("#computation쓰레드_174-create : $threadName number:$number")
+                emitter.onNext(number)
+                Thread.sleep(100L)
+            }
+            emitter.onComplete()
+        }.doFinally {
+            println("##########computation쓰레드_174-end########")
+        }
+        src
+            .observeOn(Schedulers.computation())
+            .subscribeOn(Schedulers.io()).subscribe { number ->
+            val subscribedThreadName = Thread.currentThread().name
+            println("#computation쓰레드_174-subscribe : $subscribedThreadName number:$number")
         }
     }
 }
