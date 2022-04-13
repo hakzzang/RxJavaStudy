@@ -3,6 +3,7 @@ package com.example.rxjava
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.rxjava.databinding.ActivityMainBinding
+import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -22,7 +23,11 @@ class MainActivity : AppCompatActivity() {
 //        Observable_발생과소비과다른쓰레드에서발생시키기()
 //        Flowable_interval을_onBackpressureBuffer를_통해서발생시키기()
 //        Flowable_interval을_onBackpressureLatest를_통해서발생시키기()
-        Flowable_interval을_onBackpressureDrop을_통해서발생시키기()
+//        Flowable_create이_BackpressureStrategy_DROP전략일때_확인()
+//        Flowable_create이_BackpressureStrategy_BUFFER전략일때_확인()
+//        Flowable_create이_BackpressureStrategy_ERROR전략일때_확인()
+//        Flowable_create이_BackpressureStrategy_MISSING전략일때_확인()
+        Flowable_create이_BackpressureStrategy_LATEST전략일때_확인()
     }
 
     //page171
@@ -184,7 +189,7 @@ class MainActivity : AppCompatActivity() {
 
     fun `Flowable_interval을_onBackpressureDrop을_통해서발생시키기`() {
         //bufferSize- 128, onBackPressureBuffer에서 확인
-        //최신 아이템을 buffer에 유지해놓기 때문에 아이템소비가 빠르게 오름
+        //최신 아이템을 buffer에 유지해놓기 때문에 아이템소비를 버림
         Flowable.interval(10, TimeUnit.MILLISECONDS)
             .onBackpressureDrop { item ->
                 print("#아이템버림:$item")
@@ -194,6 +199,86 @@ class MainActivity : AppCompatActivity() {
                 return@map item
             }.observeOn(Schedulers.io()).subscribe { item ->
                 Thread.sleep(100)
+                println("\n#아이템소비:$item")
+            }
+    }
+
+    fun `Flowable_create이_BackpressureStrategy_BUFFER전략일때_확인`() {
+        Flowable.create<Int>({ emitter ->
+            for (a in 0 .. 1000) {
+                if(emitter.isCancelled) {
+                    return@create
+                }
+                emitter.onNext(a)
+            }
+            emitter.onComplete()
+        }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.io())
+            .subscribe { item ->
+                println("\n#아이템소비:$item")
+            }
+    }
+
+    fun `Flowable_create이_BackpressureStrategy_DROP전략일때_확인`() {
+        Flowable.create<Int>({ emitter ->
+            for (a in 0 .. 1000) {
+                if(emitter.isCancelled) {
+                    return@create
+                }
+                emitter.onNext(a)
+            }
+            emitter.onComplete()
+        }, BackpressureStrategy.DROP).subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.io())
+            .subscribe { item ->
+                println("\n#아이템소비:$item")
+            }
+    }
+
+    fun `Flowable_create이_BackpressureStrategy_ERROR전략일때_확인`() {
+        Flowable.create<Int>({ emitter ->
+            for (a in 0 .. 1000) {
+                if(emitter.isCancelled) {
+                    return@create
+                }
+                emitter.onNext(a)
+            }
+            emitter.onComplete()
+        }, BackpressureStrategy.ERROR).subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.io())
+            .subscribe { item ->
+                println("\n#아이템소비:$item")
+            }
+    }
+
+    fun `Flowable_create이_BackpressureStrategy_MISSING전략일때_확인`() {
+        Flowable.create<Int>({ emitter ->
+            for (a in 0 .. 1000) {
+                if(emitter.isCancelled) {
+                    return@create
+                }
+                emitter.onNext(a)
+            }
+            emitter.onComplete()
+        }, BackpressureStrategy.MISSING).subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.io())
+            .subscribe { item ->
+                println("\n#아이템소비:$item")
+            }
+    }
+
+    fun `Flowable_create이_BackpressureStrategy_LATEST전략일때_확인`() {
+        Flowable.create<Int>({ emitter ->
+            for (a in 0 .. 1000) {
+                if(emitter.isCancelled) {
+                    return@create
+                }
+                emitter.onNext(a)
+            }
+            emitter.onComplete()
+        }, BackpressureStrategy.LATEST).subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.io())
+            .subscribe { item ->
                 println("\n#아이템소비:$item")
             }
     }
