@@ -21,7 +21,8 @@ class MainActivity : AppCompatActivity() {
 //        Observable_발생과소비과동일한쓰레드에서발생시키기()
 //        Observable_발생과소비과다른쓰레드에서발생시키기()
 //        Flowable_interval을_onBackpressureBuffer를_통해서발생시키기()
-        Flowable_interval을_onBackpressureLatest를_통해서발생시키기()
+//        Flowable_interval을_onBackpressureLatest를_통해서발생시키기()
+        Flowable_interval을_onBackpressureDrop을_통해서발생시키기()
     }
 
     //page171
@@ -178,6 +179,22 @@ class MainActivity : AppCompatActivity() {
             }.observeOn(Schedulers.io()).subscribe { item ->
                 Thread.sleep(100)
                 println("#아이템소비:$item")
+            }
+    }
+
+    fun `Flowable_interval을_onBackpressureDrop을_통해서발생시키기`() {
+        //bufferSize- 128, onBackPressureBuffer에서 확인
+        //최신 아이템을 buffer에 유지해놓기 때문에 아이템소비가 빠르게 오름
+        Flowable.interval(10, TimeUnit.MILLISECONDS)
+            .onBackpressureDrop { item ->
+                print("#아이템버림:$item")
+            }
+            .map { item ->
+                println("#아이템발행:$item")
+                return@map item
+            }.observeOn(Schedulers.io()).subscribe { item ->
+                Thread.sleep(100)
+                println("\n#아이템소비:$item")
             }
     }
 }
