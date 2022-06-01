@@ -8,9 +8,15 @@ import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class Page151CombiningOperatorsTest {
+    // Operator 연산자
     @Test
     fun `combineLatest연산자_테스트`() {
+
+        // src1:  1   2   3   4   5
+        // src2:   A   BCD
         // 두 Observable에서 가장 최근 발행한 아이템을 취합하여 하나로 발행하는 연산자
+        // 가장 최근에 발행한 아이템을 취합하여 하나로 발행하는 것이 combineLatest
+        // 데이터 설명 : src1과 src2에 데이터가 들어올 때, 가장 마지막 데이터가 셋팅되어 출력된다.
         val src1 = Observable.create<Int> { emitter ->
             Thread {
                 for (number in 1..5) {
@@ -18,7 +24,7 @@ class Page151CombiningOperatorsTest {
                     try {
                         Thread.sleep(1000L)
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        println(e.message!!)
                     }
                 }
             }.start()
@@ -36,7 +42,7 @@ class Page151CombiningOperatorsTest {
                     Thread.sleep(700L)
                     emitter.onNext("D")
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    println(e.message!!)
                 }
             }.start()
         }
@@ -50,8 +56,11 @@ class Page151CombiningOperatorsTest {
 
     @Test
     fun `zip연산자_테스트`() {
+        //   1   2   3   4   5
+        //    A   BCD
         // 여러 Observable을 하나로 결합하여 지정된 함수를 통해서 하나의 아이템으로 발행한다.
         // 순서를 엄격하게 지켜서 출력하는게 combineLatest 와는 다르다.
+        // 데이터 설명 : src1과 src2에 데이터가 들어올 때, 순서를 지키면 쌍에 맞게 출력된다.
         val src1 = Observable.create<Int> { emitter ->
             Thread {
                 for (number in 1..5) {
@@ -92,6 +101,7 @@ class Page151CombiningOperatorsTest {
     @Test
     fun `merge연산자_테스트`() {
         // merge 연산자를 이용하면 여러 Observable을 하나의 Observable처럼 결합하여 사용 가능하다.
+        // 데이터 설명 : src1과 src2에 데이터가 들어올 때, src1과 src2가 연속적인 하나의 Observable로 출력된다.
         val src1: Observable<Int> = Observable.intervalRange(1, 5, 0, 100, TimeUnit.MILLISECONDS)
             .map { (it * 20).toInt() }
 
